@@ -8,18 +8,15 @@ export const BUSINESS = {
   telephone: '+447498853144',
   telephoneDisplay: '07498853144',
   email: 'emeraldeventplanning2026@outlook.com',
+  facebookUrl: 'https://www.facebook.com/profile.php?id=61594271090704',
   // Home-based sole trader — no public storefront address, service-area business.
   addressLocality: 'Walthamstow, London',
   postalCode: 'E17',
   addressRegion: 'London',
   addressCountry: 'GB',
-  // Approx. coordinates for Surrey — used only for general regional business context.
-  latitude: 51.3148,
-  longitude: -0.5600,
   // Service areas for regional event planning.
   areasServed: ['Surrey', 'West Sussex', 'Hampshire'],
   areasServedShort: 'Surrey, West Sussex and Hampshire',
-  priceRange: '££',
 };
 
 export const ENQUIRY_FORM_URL =

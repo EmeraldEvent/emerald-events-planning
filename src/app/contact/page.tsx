@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import styles from './page.module.css';
-import { ENQUIRY_FORM_URL, SITE_URL } from '@/lib/site';
+import { SITE_URL } from '@/lib/site';
+import { getSiteSettings } from '@/lib/content';
 
 const title = 'Contact Us — Get a Quote From Your Event Planner';
 const description = 'Get in touch with Emerald Event Planning to book your event, request a quote, or simply have a chat about your ideas. Serving Haslemere, Surrey, West Sussex and Hampshire.';
@@ -23,7 +24,15 @@ const breadcrumbJsonLd = {
   ],
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await getSiteSettings();
+  const socialLinks = [
+    { label: 'Facebook', url: settings.facebookUrl, text: 'Visit our page' },
+    { label: 'Instagram', url: settings.instagramUrl, text: 'Visit our Instagram' },
+    { label: 'TikTok', url: settings.tiktokUrl, text: 'Visit our TikTok' },
+    { label: 'LinkedIn', url: settings.linkedinUrl, text: 'Visit our LinkedIn' },
+  ].filter((link): link is { label: string; url: string; text: string } => Boolean(link.url));
+
   return (
     <>
       <div className="page-hero">
@@ -45,7 +54,7 @@ export default function ContactPage() {
               <div className={styles.externalFormBox}>
                 <h3>Ready to tell us about your event?</h3>
                 <p>Please click the button below to fill out our detailed enquiry form. This helps us gather all the essential details about your occasion so we can provide you with the best possible service and a tailored quote.</p>
-                <a href={ENQUIRY_FORM_URL} target="_blank" rel="noopener noreferrer" className={`btn btn-primary ${styles.submitBtn}`}>
+                <a href={settings.enquiryFormUrl} target="_blank" rel="noopener noreferrer" className={`btn btn-primary ${styles.submitBtn}`}>
                   Open Enquiry Form ✦
                 </a>
               </div>
@@ -56,20 +65,29 @@ export default function ContactPage() {
               <div className={styles.infoCard}>
                 <h3 className={styles.infoTitle}>Direct Contact</h3>
                 <div className={styles.infoItems}>
-                  <a href="tel:07498853144" className={styles.infoItem}>
+                  <a href={`tel:${settings.telephone}`} className={styles.infoItem}>
                     <span className={styles.infoIcon}>📞</span>
                     <div>
                       <strong>Phone</strong>
-                      <span>07498853144</span>
+                      <span>{settings.telephoneDisplay}</span>
                     </div>
                   </a>
-                  <a href="mailto:emeraldeventplanning2026@outlook.com" className={`${styles.infoItem} ${styles.emailItem}`}>
+                  <a href={`mailto:${settings.email}`} className={`${styles.infoItem} ${styles.emailItem}`}>
                     <span className={styles.infoIcon}>✉️</span>
                     <div>
                       <strong>Email</strong>
-                      <span>emeraldeventplanning2026@outlook.com</span>
+                      <span>{settings.email}</span>
                     </div>
                   </a>
+                  {socialLinks.map(({ label, url, text }) => (
+                    <a key={label} href={url} target="_blank" rel="noopener noreferrer" className={styles.infoItem}>
+                      <span className={styles.infoIcon}>{label.slice(0, 1)}</span>
+                      <div>
+                        <strong>{label}</strong>
+                        <span>{text}</span>
+                      </div>
+                    </a>
+                  ))}
                 </div>
               </div>
 
@@ -109,7 +127,7 @@ export default function ContactPage() {
 
               <div className={styles.infoCard}>
                 <h3 className={styles.infoTitle}>Areas We Cover</h3>
-                <p className={styles.areasText}>Haslemere, Surrey, West Sussex and Hampshire</p>
+                <p className={styles.areasText}>{settings.addressLocality}, {settings.areasServedShort}</p>
                 <p className={styles.areasSubtext}>Elegant, personal celebrations planned across these areas.</p>
               </div>
             </div>

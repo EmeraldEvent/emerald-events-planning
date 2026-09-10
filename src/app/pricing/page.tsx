@@ -2,58 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import styles from './page.module.css';
 import { SITE_URL } from '@/lib/site';
-
-const packages = [
-  {
-    icon: '📋',
-    name: 'Emerald Essentials',
-    subtitle: 'Basic Planning Support',
-    price: '£150',
-    note: 'flat fee',
-    includes: [
-      'Initial consultation',
-      'Venue suggestions',
-      'Supplier recommendations',
-      'Decorating options',
-      'Event checklist',
-    ],
-    cta: 'Book Now',
-    href: '/contact',
-  },
-  {
-    icon: '✨',
-    name: 'Emerald Complete',
-    subtitle: 'Full Event Planning',
-    price: '£250 – £2,500',
-    note: '+ expenses by event size',
-    includes: [
-      'End-to-end event management',
-      'Venue sourcing & site visits',
-      'Supplier negotiations',
-      'Budget management',
-      'Timeline planning',
-      'On-the-day coordination',
-    ],
-    cta: 'Book Now',
-    href: '/contact',
-    featured: true,
-  },
-  {
-    icon: '💎',
-    name: 'Emerald Bespoke',
-    subtitle: 'Tailored events, fully customised to you',
-    price: 'Tailored Quote',
-    note: 'Quote agreed to your needs',
-    includes: [
-      'Tailored events, fully customised to you',
-      'Large-scale event logistics',
-      'Corporate & community events',
-      'Risk assessment included',
-    ],
-    cta: 'Get a Quote',
-    href: '/contact',
-  },
-];
+import { getPricingContent } from '@/lib/content';
 
 const title = 'Event Planner Pricing — Packages From £150';
 const description = 'Transparent event planner pricing across Surrey, West Sussex and Hampshire. From £150 for essential planning support to fully bespoke quotes for larger events — no hidden fees.';
@@ -67,28 +16,6 @@ export const metadata: Metadata = {
   twitter: { title, description },
 };
 
-const faqs = [
-  { q: 'Do I need to pay a deposit?', a: 'Yes. A non-refundable booking deposit is required to confirm your date. The amount varies by package and is confirmed in your written quote.' },
-  { q: 'What areas do you cover?', a: 'We serve Surrey, West Sussex and Hampshire. Events outside these areas can be discussed — additional travel expenses may apply.' },
-  { q: 'What is included in "expenses"?', a: 'Expenses are out-of-pocket costs incurred on your behalf — for example, travel to venues, printing costs, decorations, or sourcing specific materials. All expenses are pre-agreed with you before any spend.' },
-  { q: 'Can I add On-the-Day coordination?', a: 'Yes. When booked on its own, On-the-Day coordination is £70 per hour with a 2-hour minimum. When added to Emerald Complete or Emerald Bespoke, a reduced rate may apply depending on the size of your event.' },
-  { q: 'What if I need to cancel?', a: 'Cancellation terms are set out in your booking agreement. Generally, if you cancel with 30+ days notice, any payments beyond the deposit may be refunded. See our Terms & Conditions for full details.' },
-  { q: 'Do you work with a specific set of suppliers?', a: 'We work with a vetted network of trusted local suppliers, but we are happy to work with your preferred vendors too. Supplier selection is always discussed and agreed with you.' },
-];
-
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map(({ q, a }) => ({
-    '@type': 'Question',
-    name: q,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: a,
-    },
-  })),
-};
-
 const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -98,7 +25,21 @@ const breadcrumbJsonLd = {
   ],
 };
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const pricing = await getPricingContent();
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: pricing.faqs.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: a,
+      },
+    })),
+  };
+
   return (
     <>
       <div className="page-hero">
@@ -116,24 +57,14 @@ export default function PricingPage() {
           <h2>How We Size Your Event</h2>
           <div className="section-divider"><span>✦</span></div>
           <div className={styles.sizeGrid}>
-            <div className={styles.sizeCard}>
-              <div className={styles.sizeNumber}>👥</div>
-              <h3>Small Events</h3>
-              <div className={styles.sizeRange}>0 – 50 Guests</div>
-              <p>Intimate gatherings, afternoon teas, baby showers, small birthday parties and personal celebrations.</p>
-            </div>
-            <div className={styles.sizeCard}>
-              <div className={styles.sizeNumber}>👥👥</div>
-              <h3>Medium Events</h3>
-              <div className={styles.sizeRange}>50 – 150 Guests</div>
-              <p>Anniversary parties, milestone birthdays, engagements, repasts, and community celebrations.</p>
-            </div>
-            <div className={styles.sizeCard}>
-              <div className={styles.sizeNumber}>👥👥👥</div>
-              <h3>Large Events</h3>
-              <div className={styles.sizeRange}>150+ Guests</div>
-              <p>Corporate events, large award ceremonies, grand celebrations and multi-vendor productions.</p>
-            </div>
+            {pricing.eventSizes.map(({ icon, title, range, description }) => (
+              <div key={title} className={styles.sizeCard}>
+                <div className={styles.sizeNumber}>{icon}</div>
+                <h3>{title}</h3>
+                <div className={styles.sizeRange}>{range}</div>
+                <p>{description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -148,7 +79,7 @@ export default function PricingPage() {
           </div>
 
           <div className={styles.packageGrid}>
-            {packages.map((pkg) => (
+            {pricing.packages.map((pkg) => (
               <article key={pkg.name} className={`${styles.packageCard} ${pkg.featured ? styles.featuredCard : ''}`}>
                 <div className={styles.badgeSlot}>
                   {pkg.featured && <span className={styles.popularBadge}>Most Popular</span>}
@@ -176,32 +107,31 @@ export default function PricingPage() {
 
           <aside className={styles.onDayAddon}>
             <div className={styles.addonIntro}>
-              <span className={styles.addonBadge}>Add-on</span>
+              <span className={styles.addonBadge}>{pricing.onDayAddon.badge}</span>
               <div className={styles.packageTop}>
-                <span className={styles.packageIcon}>📅</span>
+                <span className={styles.packageIcon}>{pricing.onDayAddon.icon}</span>
                 <div>
-                  <h3>Emerald On-the-Day</h3>
-                  <p>Coordination only, added after your main package is chosen.</p>
+                  <h3>{pricing.onDayAddon.name}</h3>
+                  <p>{pricing.onDayAddon.subtitle}</p>
                 </div>
               </div>
             </div>
             <ul className={styles.addonIncludes}>
-              <li>Event setup & supervision</li>
-              <li>Supplier management</li>
-              <li>Guest coordination</li>
-              <li>Troubleshooting</li>
+              {pricing.onDayAddon.includes.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
             </ul>
             <div className={styles.addonRate}>
-              <span>£70 p/h</span>
-              <small>Minimum 2 hours. Reduced rates apply with Emerald Complete and Emerald Bespoke packages depending on event size.</small>
+              <span>{pricing.onDayAddon.rate}</span>
+              <small>{pricing.onDayAddon.note}</small>
             </div>
-            <Link href="/contact" className="btn btn-gold">Add Coordination</Link>
+            <Link href={pricing.onDayAddon.href} className="btn btn-gold">{pricing.onDayAddon.cta}</Link>
           </aside>
 
           {/* Expenses note */}
           <div className={styles.expenseNote}>
             <span>ℹ️</span>
-            <p><strong>About expenses:</strong> Where quoted, expenses include reasonable out-of-pocket costs such as travel, printing, decorations, and materials sourced on your behalf. All expenses are pre-agreed with you in writing before any spend is incurred.</p>
+            <p><strong>About expenses:</strong> {pricing.expenseNote}</p>
           </div>
         </div>
       </section>
@@ -213,16 +143,7 @@ export default function PricingPage() {
           <h2>Additional Services</h2>
           <p style={{ maxWidth: 560, margin: '0.75rem auto 2.5rem' }}>Available as standalone additions to any package.</p>
           <div className={styles.addonsGrid}>
-            {[
-              { icon: '🎨', label: 'Event Styling & Decorating' },
-              { icon: '✉️', label: 'Invitation Management' },
-              { icon: '📊', label: 'Guest List Tracking' },
-              { icon: '🔍', label: 'Vendor Sourcing' },
-              { icon: '📋', label: 'Risk Assessments' },
-              { icon: '📁', label: 'Event Administration' },
-              { icon: '🎁', label: 'Party Bag Preparation' },
-              { icon: '🗓️', label: 'Mood Board Creation' },
-            ].map(({ icon, label }) => (
+            {pricing.addOns.map(({ icon, label }) => (
               <div key={label} className={styles.addonCard}>
                 <span className={styles.addonIcon}>{icon}</span>
                 <span className={styles.addonLabel}>{label}</span>
@@ -242,7 +163,7 @@ export default function PricingPage() {
             <div className="section-divider"><span>✦</span></div>
           </div>
           <div className={styles.faqGrid}>
-            {faqs.map(({ q, a }) => (
+            {pricing.faqs.map(({ q, a }) => (
               <div key={q} className={styles.faqCard}>
                 <h4 className={styles.faqQ}>{q}</h4>
                 <p className={styles.faqA}>{a}</p>
@@ -264,9 +185,9 @@ export default function PricingPage() {
       {/* CTA */}
       <section style={{ background: 'var(--emerald-dark)', padding: '5rem 0', textAlign: 'center' }}>
         <div className="container">
-          <h2 style={{ color: 'var(--white)', marginBottom: '1rem' }}>Ready to get started?</h2>
-          <p style={{ color: 'rgba(255,255,255,0.75)', marginBottom: '2rem', maxWidth: 500, margin: '0 auto 2rem' }}>Book your free initial consultation and let&apos;s start planning your perfect event.</p>
-          <Link href="/contact" className="btn btn-gold">Book a Free Consultation</Link>
+          <h2 style={{ color: 'var(--white)', marginBottom: '1rem' }}>{pricing.cta.heading}</h2>
+          <p style={{ color: 'rgba(255,255,255,0.75)', marginBottom: '2rem', maxWidth: 500, margin: '0 auto 2rem' }}>{pricing.cta.text}</p>
+          <Link href={pricing.cta.href} className="btn btn-gold">{pricing.cta.buttonLabel}</Link>
         </div>
       </section>
     </>

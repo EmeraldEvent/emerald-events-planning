@@ -1,9 +1,18 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { getSiteSettings } from '@/lib/content';
 import styles from './Footer.module.css';
 
-export default function Footer() {
+export default async function Footer() {
+  const settings = await getSiteSettings();
   const year = new Date().getFullYear();
+  const socialLinks = [
+    { label: 'Facebook', url: settings.facebookUrl },
+    { label: 'Instagram', url: settings.instagramUrl },
+    { label: 'TikTok', url: settings.tiktokUrl },
+    { label: 'LinkedIn', url: settings.linkedinUrl },
+  ].filter((link): link is { label: string; url: string } => Boolean(link.url));
+
   return (
     <footer className={styles.footer}>
       <div className={styles.bgOverlay} />
@@ -39,12 +48,18 @@ export default function Footer() {
           <ul className={styles.contactList}>
             <li>
               <span className={styles.contactLabel}>Phone</span>
-              <a href="tel:07498853144">07498853144</a>
+              <a href={`tel:${settings.telephone}`}>{settings.telephoneDisplay}</a>
             </li>
             <li>
               <span className={styles.contactLabel}>Email</span>
-              <a href="mailto:emeraldeventplanning2026@outlook.com">emeraldeventplanning2026@outlook.com</a>
+              <a href={`mailto:${settings.email}`}>{settings.email}</a>
             </li>
+            {socialLinks.map(({ label, url }) => (
+              <li key={label}>
+                <span className={styles.contactLabel}>{label}</span>
+                <a href={url} target="_blank" rel="noopener noreferrer">Visit our page</a>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { BUSINESS, SITE_NAME, SITE_URL } from '@/lib/site';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
+import { getSiteSettings } from '@/lib/content';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -25,33 +26,39 @@ export const metadata: Metadata = {
   },
 };
 
-const localBusinessJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: BUSINESS.legalName,
-  founder: {
-    '@type': 'Person',
-    name: BUSINESS.founder,
-  },
-  image: `${SITE_URL}/emerald-events_logo_v2.png`,
-  url: SITE_URL,
-  telephone: BUSINESS.telephone,
-  email: BUSINESS.email,
-  priceRange: BUSINESS.priceRange,
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: BUSINESS.addressLocality,
-    postalCode: BUSINESS.postalCode,
-    addressRegion: BUSINESS.addressRegion,
-    addressCountry: BUSINESS.addressCountry,
-  },
-  areaServed: [
-    ...BUSINESS.areasServed.map((name) => ({ '@type': 'AdministrativeArea', name })),
-  ],
-  sameAs: [],
-};
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const settings = await getSiteSettings();
+  const sameAs = [
+    settings.facebookUrl,
+    settings.instagramUrl,
+    settings.tiktokUrl,
+    settings.linkedinUrl,
+  ].filter(Boolean);
+  const localBusinessJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: settings.legalName,
+    founder: {
+      '@type': 'Person',
+      name: settings.founder,
+    },
+    image: `${SITE_URL}/emerald-events_logo_v2.png`,
+    url: SITE_URL,
+    telephone: settings.telephone,
+    email: settings.email,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: settings.addressLocality,
+      postalCode: settings.postalCode,
+      addressRegion: settings.addressRegion,
+      addressCountry: settings.addressCountry,
+    },
+    areaServed: [
+      ...settings.areasServed.map((name) => ({ '@type': 'AdministrativeArea', name })),
+    ],
+    sameAs,
+  };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-GB">
       <body>

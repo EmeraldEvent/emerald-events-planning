@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Use Node 22.12 or newer for the embedded Sanity Studio.
+
 First, run the development server:
 
 ```bash
@@ -15,6 +17,26 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Sanity CMS
+
+The Sanity Studio is embedded at [http://localhost:3000/studio](http://localhost:3000/studio).
+
+Create a Sanity project, then copy `.env.example` to `.env.local` and set:
+
+```bash
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2026-09-08
+NEXT_PUBLIC_SANITY_STUDIO_URL=/studio
+```
+
+The site currently reads these editable Sanity documents:
+
+- `Website details`: phone, email, enquiry form URL, service areas, Facebook, Instagram, TikTok and LinkedIn links.
+- `Pricing page`: event sizes, packages, on-the-day add-on, additional services, expenses note, FAQs and bottom CTA.
+
+If Sanity is not configured yet, the site uses the existing hard-coded content as a fallback so builds still work.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
