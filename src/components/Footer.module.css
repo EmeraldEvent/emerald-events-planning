@@ -108,6 +108,9 @@
 .contactList li a { white-space: nowrap; font-size: clamp(0.72rem, 0.85vw, 0.88rem); }
 .contactList li a:hover { color: var(--gold-light); }
 
+.socialLink { display: inline-flex; align-items: center; gap: 0.4rem; }
+.socialLink svg { flex-shrink: 0; color: #fff; }
+
 .bottom {
   background: rgba(0,0,0,0.24);
   padding: 1.25rem 0;

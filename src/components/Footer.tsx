@@ -8,10 +8,15 @@ export default async function Footer() {
   const year = new Date().getFullYear();
   const socialLinks = [
     { label: 'Facebook', url: settings.facebookUrl },
-    { label: 'Instagram', url: settings.instagramUrl },
-    { label: 'TikTok', url: settings.tiktokUrl },
-    { label: 'LinkedIn', url: settings.linkedinUrl },
   ].filter((link): link is { label: string; url: string } => Boolean(link.url));
+
+  const socialIcons: Record<string, JSX.Element> = {
+    Facebook: (
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+        <path d="M13.5 21v-8.06h2.7l.4-3.14h-3.1V7.83c0-.91.25-1.53 1.56-1.53h1.66V3.5c-.29-.04-1.27-.12-2.4-.12-2.38 0-4.01 1.45-4.01 4.11v2.3H7.6v3.14h2.71V21h3.19z" />
+      </svg>
+    ),
+  };
 
   return (
     <footer className={styles.footer}>
@@ -57,7 +62,10 @@ export default async function Footer() {
             {socialLinks.map(({ label, url }) => (
               <li key={label}>
                 <span className={styles.contactLabel}>{label}</span>
-                <a href={url} target="_blank" rel="noopener noreferrer">Visit our page</a>
+                <a href={url} target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+                  {socialIcons[label]}
+                  Visit our page
+                </a>
               </li>
             ))}
           </ul>
