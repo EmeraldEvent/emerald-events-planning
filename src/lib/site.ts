@@ -11,7 +11,7 @@ export const BUSINESS = {
   facebookUrl: 'https://www.facebook.com/profile.php?id=61594271090704',
   // Home-based sole trader — no public storefront address, service-area business.
   addressLocality: 'London',
-  postalCode: 'E17',
+  postalCode: '',
   addressRegion: 'London',
   addressCountry: 'GB',
   // Service areas for regional event planning.

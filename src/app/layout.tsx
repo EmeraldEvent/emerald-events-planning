@@ -49,7 +49,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     address: {
       '@type': 'PostalAddress',
       addressLocality: settings.addressLocality,
-      postalCode: settings.postalCode,
+      ...(settings.postalCode ? { postalCode: settings.postalCode } : {}),
       addressRegion: settings.addressRegion,
       addressCountry: settings.addressCountry,
     },
