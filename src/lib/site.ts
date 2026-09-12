@@ -10,7 +10,7 @@ export const BUSINESS = {
   email: 'emeraldeventplanning2026@outlook.com',
   facebookUrl: 'https://www.facebook.com/profile.php?id=61594271090704',
   // Home-based sole trader — no public storefront address, service-area business.
-  addressLocality: 'Walthamstow, London',
+  addressLocality: 'London',
   postalCode: 'E17',
   addressRegion: 'London',
   addressCountry: 'GB',
