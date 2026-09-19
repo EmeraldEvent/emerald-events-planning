@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import type { ReactElement } from 'react';
 import { getSiteSettings } from '@/lib/content';
+import { socialIcons } from './SocialIcons';
 import styles from './Footer.module.css';
 
 export default async function Footer() {
@@ -9,15 +9,8 @@ export default async function Footer() {
   const year = new Date().getFullYear();
   const socialLinks = [
     { label: 'Facebook', url: settings.facebookUrl },
+    { label: 'LinkedIn', url: settings.linkedinUrl },
   ].filter((link): link is { label: string; url: string } => Boolean(link.url));
-
-  const socialIcons: Record<string, ReactElement> = {
-    Facebook: (
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
-        <path d="M13.5 21v-8.06h2.7l.4-3.14h-3.1V7.83c0-.91.25-1.53 1.56-1.53h1.66V3.5c-.29-.04-1.27-.12-2.4-.12-2.38 0-4.01 1.45-4.01 4.11v2.3H7.6v3.14h2.71V21h3.19z" />
-      </svg>
-    ),
-  };
 
   return (
     <footer className={styles.footer}>
@@ -60,15 +53,25 @@ export default async function Footer() {
               <span className={styles.contactLabel}>Email</span>
               <a href={`mailto:${settings.email}`}>{settings.email}</a>
             </li>
-            {socialLinks.map(({ label, url }) => (
-              <li key={label}>
-                <span className={styles.contactLabel}>{label}</span>
-                <a href={url} target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
-                  {socialIcons[label]}
-                  Visit our page
-                </a>
+            {socialLinks.length > 0 && (
+              <li className={styles.socialItem}>
+                <span className={styles.contactLabel}>Follow Us</span>
+                <div className={styles.socialBar}>
+                  {socialLinks.map(({ label, url }) => (
+                    <a
+                      key={label}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.socialLink}
+                      aria-label={label}
+                    >
+                      {socialIcons[label]}
+                    </a>
+                  ))}
+                </div>
               </li>
-            ))}
+            )}
           </ul>
         </div>
       </div>

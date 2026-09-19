@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import styles from './page.module.css';
 import { SITE_URL } from '@/lib/site';
 import { getSiteSettings } from '@/lib/content';
+import { socialIcons } from '@/components/SocialIcons';
 
 const title = 'Contact Us — Get a Quote From Your Event Planner';
 const description = 'Get in touch with Emerald Event Planning to book your event, request a quote, or simply have a chat about your ideas. Serving Haslemere, Surrey, West Sussex and Hampshire.';
@@ -27,11 +28,11 @@ const breadcrumbJsonLd = {
 export default async function ContactPage() {
   const settings = await getSiteSettings();
   const socialLinks = [
-    { label: 'Facebook', url: settings.facebookUrl, text: 'Visit our page' },
-    { label: 'Instagram', url: settings.instagramUrl, text: 'Visit our Instagram' },
-    { label: 'TikTok', url: settings.tiktokUrl, text: 'Visit our TikTok' },
-    { label: 'LinkedIn', url: settings.linkedinUrl, text: 'Visit our LinkedIn' },
-  ].filter((link): link is { label: string; url: string; text: string } => Boolean(link.url));
+    { label: 'Facebook', url: settings.facebookUrl },
+    { label: 'Instagram', url: settings.instagramUrl },
+    { label: 'TikTok', url: settings.tiktokUrl },
+    { label: 'LinkedIn', url: settings.linkedinUrl },
+  ].filter((link): link is { label: string; url: string } => Boolean(link.url));
 
   return (
     <>
@@ -65,30 +66,34 @@ export default async function ContactPage() {
               <div className={styles.infoCard}>
                 <h3 className={styles.infoTitle}>Direct Contact</h3>
                 <div className={styles.infoItems}>
-                  <a href={`tel:${settings.telephone}`} className={styles.infoItem}>
+                  <a href={`tel:${settings.telephone}`} className={`${styles.infoItem} ${styles.inlineItem}`}>
                     <span className={styles.infoIcon}>📞</span>
                     <div>
                       <strong>Phone</strong>
                       <span>{settings.telephoneDisplay}</span>
                     </div>
                   </a>
-                  <a href={`mailto:${settings.email}`} className={`${styles.infoItem} ${styles.emailItem}`}>
+                  <a href={`mailto:${settings.email}`} className={`${styles.infoItem} ${styles.inlineItem}`}>
                     <span className={styles.infoIcon}>✉️</span>
                     <div>
                       <strong>Email</strong>
                       <span>{settings.email}</span>
                     </div>
                   </a>
-                  {socialLinks.map(({ label, url, text }) => (
-                    <a key={label} href={url} target="_blank" rel="noopener noreferrer" className={styles.infoItem}>
-                      <span className={styles.infoIcon}>{label.slice(0, 1)}</span>
-                      <div>
-                        <strong>{label}</strong>
-                        <span>{text}</span>
-                      </div>
-                    </a>
-                  ))}
                 </div>
+
+                {socialLinks.length > 0 && (
+                  <div className={styles.socialRow}>
+                    <strong className={styles.socialRowLabel}>Follow Us</strong>
+                    <div className={styles.socialBar}>
+                      {socialLinks.map(({ label, url }) => (
+                        <a key={label} href={url} target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label={label}>
+                          {socialIcons[label]}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className={styles.infoCard}>

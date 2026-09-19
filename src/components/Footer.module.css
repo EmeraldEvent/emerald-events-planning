@@ -108,8 +108,28 @@
 .contactList li a { white-space: nowrap; font-size: clamp(0.72rem, 0.85vw, 0.88rem); }
 .contactList li a:hover { color: var(--gold-light); }
 
-.socialLink { display: inline-flex; align-items: center; gap: 0.4rem; }
-.socialLink svg { flex-shrink: 0; color: #fff; }
+.contactList li.socialItem { grid-template-columns: auto 1fr; }
+.socialItem .contactLabel { white-space: nowrap; }
+
+.socialBar { display: flex; align-items: center; gap: 0.6rem; }
+.socialLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(232,201,122,0.3);
+  color: #fff;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.socialLink svg { flex-shrink: 0; }
+.socialLink:hover {
+  background: rgba(232,201,122,0.18);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
 
 .bottom {
   background: rgba(0,0,0,0.24);

@@ -63,7 +63,7 @@ export const fallbackSiteSettings: SiteSettings = {
   enquiryFormUrl: ENQUIRY_FORM_URL,
   instagramUrl: '',
   tiktokUrl: '',
-  linkedinUrl: '',
+  linkedinUrl: 'https://www.linkedin.com/company/emerald-event-planning/',
 };
 
 export const fallbackPricingContent: PricingContent = {
