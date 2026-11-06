@@ -1,6 +1,5 @@
 // Central site constants used across metadata, JSON-LD and sitemap/robots.
-// TODO: replace with the real production domain once the site goes live if this changes.
-export const SITE_URL = 'https://www.emeraldevent.co.uk';
+export const SITE_URL = 'https://emeraldevent.co.uk';
 export const SITE_NAME = 'Emerald Event Planning';
 export const BUSINESS = {
   legalName: 'Emerald Event Planning',
